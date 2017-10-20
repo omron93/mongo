@@ -72,12 +72,12 @@ def remove_if_exists(path):
 
 def is_string_list(lst):
     """Return true if 'lst' is a list of strings, and false otherwise."""
-    return isinstance(lst, list) and all(isinstance(x, basestring) for x in lst)
+    return isinstance(lst, list) and all(isinstance(x, str) for x in lst)
 
 
 def is_string_set(value):
     """Return true if 'value' is a set of strings, and false otherwise."""
-    return isinstance(value, set) and all(isinstance(x, basestring) for x in value)
+    return isinstance(value, set) and all(isinstance(x, str) for x in value)
 
 
 def is_js_file(filename):

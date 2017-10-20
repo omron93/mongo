@@ -9,6 +9,8 @@ from ... import errors
 from ...logging import loggers
 from ...utils import registry
 
+import six
+
 _HOOKS = {}  # type: ignore
 
 
@@ -21,11 +23,8 @@ def make_hook(class_name, *args, **kwargs):
     return _HOOKS[class_name](*args, **kwargs)
 
 
-class Hook(object):
+class Hook(six.with_metaclass(registry.make_registry_metaclass(_HOOKS), object)):
     """Common interface all Hooks will inherit from."""
-
-    __metaclass__ = registry.make_registry_metaclass(_HOOKS)  # type: ignore
-
     REGISTERED_NAME = registry.LEAVE_UNREGISTERED
 
     def __init__(self, hook_logger, fixture, description):

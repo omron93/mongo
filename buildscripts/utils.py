@@ -139,8 +139,8 @@ def find_python(min_version=(2, 5)):
         # In case the version of Python is somehow missing sys.version_info or sys.executable.
         pass
 
-    version = re.compile(r"[Pp]ython ([\d\.]+)", re.MULTILINE)
-    binaries = ("python27", "python2.7", "python26", "python2.6", "python25", "python2.5", "python")
+    version = re.compile(r'[Pp]ython ([\d\.]+)', re.MULTILINE)
+    binaries = ('python3', 'python27', 'python2.7', 'python26', 'python2.6', 'python25', 'python2.5', 'python')
     for binary in binaries:
         try:
             out, err = subprocess.Popen([binary, "-V"], stdout=subprocess.PIPE,
@@ -166,7 +166,7 @@ def replace_with_repr(unicode_error):
     # repr() of the offending bytes into the decoded string
     # at the position they occurred
     offender = unicode_error.object[unicode_error.start:unicode_error.end]
-    return (unicode(repr(offender).strip("'").strip('"')), unicode_error.end)
+    return (str(repr(offender).strip("'").strip('"')), unicode_error.end)
 
 
 codecs.register_error("repr", replace_with_repr)

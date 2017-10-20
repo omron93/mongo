@@ -425,7 +425,7 @@ win_version_min_choices = {
 }
 
 add_option('win-version-min',
-    choices=win_version_min_choices.keys(),
+    choices=list(win_version_min_choices.keys()),
     default=None,
     help='minimum Windows version to support',
     type='choice',
@@ -551,7 +551,7 @@ except ValueError as e:
 def variable_shlex_converter(val):
     # If the argument is something other than a string, propogate
     # it literally.
-    if not isinstance(val, basestring):
+    if not isinstance(val, str):
         return val
     parse_mode = get_option('variable-parse-mode')
     if parse_mode == 'auto':
@@ -887,7 +887,7 @@ SConsignFile(str(sconsDataDir.File('sconsign')))
 def printLocalInfo():
     import sys, SCons
     print( "scons version: " + SCons.__version__ )
-    print( "python version: " + " ".join( [ `i` for i in sys.version_info ] ) )
+    print( "python version: " + " ".join( [ str(i) for i in sys.version_info ] ) )
 
 printLocalInfo()
 
@@ -2029,7 +2029,7 @@ def doConfigure(myenv):
         # to make them real errors.
         cloned.Append(CCFLAGS=['-Werror'])
         conf = Configure(cloned, help=False, custom_tests = {
-                'CheckFlag' : lambda(ctx) : CheckFlagTest(ctx, tool, extension, flag)
+                'CheckFlag' : lambda ctx : CheckFlagTest(ctx, tool, extension, flag)
         })
         available = conf.CheckFlag()
         conf.Finish()
@@ -2503,7 +2503,7 @@ def doConfigure(myenv):
         # Select those unique black files that are associated with the
         # currently enabled sanitizers, but filter out those that are
         # zero length.
-        blackfiles = {v for (k, v) in blackfiles_map.iteritems() if k in sanitizer_list}
+        blackfiles = {v for (k, v) in blackfiles_map.items() if k in sanitizer_list}
         blackfiles = [f for f in blackfiles if os.stat(f.path).st_size != 0]
 
         # Filter out any blacklist options that the toolchain doesn't support.

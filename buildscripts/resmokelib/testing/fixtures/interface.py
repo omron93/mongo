@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 
 import os.path
+import six
 import time
 
 import pymongo
@@ -25,10 +26,10 @@ def make_fixture(class_name, *args, **kwargs):
     return _FIXTURES[class_name](*args, **kwargs)
 
 
-class Fixture(object):
-    """Base class for all fixtures."""
-
-    __metaclass__ = registry.make_registry_metaclass(_FIXTURES)  # type: ignore
+class Fixture(six.with_metaclass(registry.make_registry_metaclass(_FIXTURES), object)):
+    """
+    Base class for all fixtures.
+    """
 
     # We explicitly set the 'REGISTERED_NAME' attribute so that PyLint realizes that the attribute
     # is defined for all subclasses of Fixture.

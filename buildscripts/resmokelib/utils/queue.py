@@ -8,7 +8,12 @@ See https://bugs.python.org/issue1167930 for more details.
 
 from __future__ import absolute_import
 
-import Queue as _Queue
+try:
+  import queue as _Queue
+except ImportError:
+  #Python 2
+  import Queue as _Queue
+
 import time
 
 # Exception that is raised when get_nowait() is called on an empty Queue.
