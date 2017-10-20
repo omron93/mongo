@@ -23,6 +23,7 @@ from . import ast
 from . import common
 from . import writer
 
+ABC = ABCMeta(str('ABC'), (object,), {'__slots__': ()})
 
 class ArgumentInfo(object):
     """Class that encapsulates information about an argument to a method."""
@@ -125,10 +126,8 @@ class MethodInfo(object):
             "${method_name}(${args});", method_name=self.method_name, args=args)
 
 
-class StructTypeInfoBase(object):
+class StructTypeInfoBase(ABC):
     """Base class for struct and command code generation."""
-
-    __metaclass__ = ABCMeta
 
     @abstractmethod
     def get_constructor_method(self):

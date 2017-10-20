@@ -30,6 +30,7 @@ from . import common
 from . import errors
 from . import syntax
 
+ABC = ABCMeta(str('ABC'), (object,), {'__slots__': ()})
 
 class _RuleDesc(object):
     """
@@ -486,10 +487,8 @@ def _parse(stream, error_file_name):
         return syntax.IDLParsedSpec(spec, None)
 
 
-class ImportResolverBase(object):
+class ImportResolverBase(ABC):
     """Base class for resolving imported files."""
-
-    __metaclass__ = ABCMeta
 
     def __init__(self):
         # type: () -> None
