@@ -58,7 +58,7 @@ DEFAULTS = {
     "repeat": 1,
     "reportFailureStatus": "fail",
     "reportFile": None,
-    "seed": long(time.time() * 256),  # Taken from random.py code in Python 2.7.
+    "seed": int(time.time() * 256),  # Taken from random.py code in Python 2.7.
     "serviceExecutor": None,
     "shellReadMode": None,
     "shellWriteMode": None,
