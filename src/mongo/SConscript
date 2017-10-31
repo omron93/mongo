@@ -156,7 +156,7 @@ js_engine_ver = get_option("js-engine") if get_option("server-js") == "on" else 
 
 # On windows, we need to escape the backslashes in the command-line
 # so that windows paths look okay.
-cmd_line = " ".join(sys.argv).encode('string-escape')
+cmd_line = " ".join(sys.argv).encode('unicode_escape')
 if env.TargetOSIs('windows'):
     cmd_line = cmd_line.replace('\\', r'\\')
 
