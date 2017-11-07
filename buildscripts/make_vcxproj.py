@@ -245,8 +245,8 @@ def main():
         return
 
     with ProjFileGenerator(sys.argv[1]) as projfile:
-        with open("compile_commands.json", "rb") as sjh:
-            contents = sjh.read().decode('utf-8')
+        with open("compile_commands.json", "r") as sjh:
+            contents = sjh.read()
             commands = json.loads(contents)
 
         for command in commands:

@@ -1465,8 +1465,8 @@ def _generate_header(spec, file_name):
     header.generate(spec)
 
     # Generate structs
-    with io.open(file_name, mode='wb') as file_handle:
-        file_handle.write(stream.getvalue().encode())
+    with io.open(file_name, mode='w') as file_handle:
+        file_handle.write(stream.getvalue())
 
 
 def _generate_source(spec, file_name, header_file_name):
@@ -1480,8 +1480,8 @@ def _generate_source(spec, file_name, header_file_name):
     source.generate(spec, header_file_name)
 
     # Generate structs
-    with io.open(file_name, mode='wb') as file_handle:
-        file_handle.write(stream.getvalue().encode())
+    with io.open(file_name, mode='w') as file_handle:
+        file_handle.write(stream.getvalue())
 
 
 def generate_code(spec, output_base_dir, header_file_name, source_file_name):

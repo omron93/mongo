@@ -66,7 +66,7 @@ class TestFileExplorer(object):
             A list of paths as a list(str).
         """
         tests = []
-        with open(root_file_path, "rb") as filep:
+        with open(root_file_path, "r") as filep:
             for test_path in filep:
                 test_path = test_path.strip()
                 tests.append(test_path)

@@ -981,7 +981,7 @@ def report():
         test_report["results"].append( test_result )
 
     if report_file:
-        f = open( report_file, "wb" )
+        f = open( report_file, "w" )
         f.write( json.dumps( test_report ) )
         f.close()
 
@@ -1480,7 +1480,7 @@ def main():
         test_report["failures"] = len(losers.keys())
         test_report["mongod_running_at_end"] = mongod().is_mongod_up(mongod_port)
         if report_file:
-            f = open( report_file, "wb" )
+            f = open( report_file, "w" )
             f.write( json.dumps( test_report, indent=4, separators=(',', ': ')) )
             f.close()
 
