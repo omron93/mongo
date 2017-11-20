@@ -197,7 +197,7 @@ def replaceBadCodes( errors, nextCode ):
     for assertLoc in reversed(sorted(set(zero_errors))):
         (sourceFile, byteOffset, lines, code) = assertLoc
         lineNum, _ = getLineAndColumnForPosition(assertLoc)
-        print "UPDATING_FILE: %s:%s" % (sourceFile, lineNum)
+        print("UPDATING_FILE: %s:%s" % (sourceFile, lineNum))
 
         ln = lineNum - 1
 
