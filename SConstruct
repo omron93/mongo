@@ -30,7 +30,7 @@ EnsureSConsVersion( 2, 3, 0 )
 def print_build_failures():
     from SCons.Script import GetBuildFailures
     for bf in GetBuildFailures():
-        print "%s failed: %s" % (bf.node, bf.errstr)
+        print("%s failed: %s" % (bf.node, bf.errstr))
 atexit.register(print_build_failures)
 
 def versiontuple(v):
@@ -426,7 +426,7 @@ win_version_min_choices = {
 }
 
 add_option('win-version-min',
-    choices=win_version_min_choices.keys(),
+    choices=list(win_version_min_choices.keys()),
     default=None,
     help='minimum Windows version to support',
     type='choice',
@@ -511,7 +511,7 @@ try:
         version_data = json.load(version_fp)
 
     if 'version' not in version_data:
-        print "version.json does not contain a version string"
+        print("version.json does not contain a version string")
         Exit(1)
     if 'githash' not in version_data:
         version_data['githash'] = utils.getGitVersion()
@@ -519,7 +519,7 @@ try:
 except IOError as e:
     # If the file error wasn't because the file is missing, error out
     if e.errno != errno.ENOENT:
-        print "Error opening version.json: {0}".format(e.strerror)
+        print("Error opening version.json: {0}".format(e.strerror))
         Exit(1)
 
     version_data = {
@@ -528,14 +528,14 @@ except IOError as e:
     }
 
 except ValueError as e:
-    print "Error decoding version.json: {0}".format(e)
+    print("Error decoding version.json: {0}".format(e))
     Exit(1)
 
 # Setup the command-line variables
 def variable_shlex_converter(val):
     # If the argument is something other than a string, propogate
     # it literally.
-    if not isinstance(val, basestring):
+    if not isinstance(val, str):
         return val
     parse_mode = get_option('variable-parse-mode')
     if parse_mode == 'auto':
@@ -598,7 +598,7 @@ def variable_distsrc_converter(val):
 
 variables_files = variable_shlex_converter(get_option('variables-files'))
 for file in variables_files:
-    print "Using variable customization file %s" % file
+    print("Using variable customization file %s" % file)
 
 env_vars = Variables(
     files=variables_files,
@@ -827,7 +827,7 @@ SConsignFile(str(sconsDataDir.File('sconsign')))
 def printLocalInfo():
     import sys, SCons
     print( "scons version: " + SCons.__version__ )
-    print( "python version: " + " ".join( [ `i` for i in sys.version_info ] ) )
+    print( "python version: " + " ".join( [ repr(i) for i in sys.version_info ] ) )
 
 printLocalInfo()
 
@@ -879,7 +879,7 @@ envDict = dict(BUILD_ROOT=buildDir,
                MODULE_BANNERS=[],
                ARCHIVE_ADDITION_DIR_MAP={},
                ARCHIVE_ADDITIONS=[],
-               PYTHON=utils.find_python(),
+               PYTHON="/usr/bin/python2",
                SERVER_ARCHIVE='${SERVER_DIST_BASENAME}${DIST_ARCHIVE_SUFFIX}',
                UNITTEST_ALIAS='unittests',
                # TODO: Move unittests.txt to $BUILD_DIR, but that requires
@@ -901,12 +901,12 @@ env.AddMethod(env_os_is_wrapper, 'TargetOSIs')
 env.AddMethod(env_get_os_name_wrapper, 'GetTargetOSName')
 
 def fatal_error(env, msg, *args):
-    print msg.format(*args)
+    print(msg.format(*args))
     Exit(1)
 
 def conf_error(env, msg, *args):
-    print msg.format(*args)
-    print "See {0} for details".format(env['CONFIGURELOG'].abspath)
+    print(msg.format(*args))
+    print("See {0} for details".format(env['CONFIGURELOG']))
 
     Exit(1)
 
@@ -926,12 +926,12 @@ else:
 env.AddMethod(lambda env: env['VERBOSE'], 'Verbose')
 
 if has_option('variables-help'):
-    print env_vars.GenerateHelpText(env)
+    print(env_vars.GenerateHelpText(env))
     Exit(0)
 
 unknown_vars = env_vars.UnknownVariables()
 if unknown_vars:
-    env.FatalError("Unknown variables specified: {0}", ", ".join(unknown_vars.keys()))
+    env.FatalError("Unknown variables specified: {0}", ", ".join(list(unknown_vars.keys())))
 
 def set_config_header_define(env, varname, varval = 1):
     env['CONFIG_HEADER_DEFINES'][varname] = varval
@@ -1016,7 +1016,7 @@ def CheckForProcessor(context, which_arch):
         context.Result(ret)
         return ret;
 
-    for k in processor_macros.keys():
+    for k in list(processor_macros.keys()):
         ret = run_compile_check(k)
         if ret:
             context.Result('Detected a %s processor' % k)
@@ -1124,7 +1124,7 @@ else:
     env['TARGET_ARCH'] = detected_processor
 
 if env['TARGET_OS'] not in os_macros:
-    print "No special config for [{0}] which probably means it won't work".format(env['TARGET_OS'])
+    print("No special config for [{0}] which probably means it won't work".format(env['TARGET_OS']))
 elif not detectConf.CheckForOS(env['TARGET_OS']):
     env.ConfError("TARGET_OS ({0}) is not supported by compiler", env['TARGET_OS'])
 
@@ -1813,7 +1813,7 @@ def doConfigure(myenv):
             # form -Wno-xxx (but not -Wno-error=xxx), we also add -Wxxx to the flags. GCC does
             # warn on unknown -Wxxx style flags, so this lets us probe for availablity of
             # -Wno-xxx.
-            for kw in test_mutation.keys():
+            for kw in list(test_mutation.keys()):
                 test_flags = test_mutation[kw]
                 for test_flag in test_flags:
                     if test_flag.startswith("-Wno-") and not test_flag.startswith("-Wno-error="):
@@ -1827,7 +1827,7 @@ def doConfigure(myenv):
         # to make them real errors.
         cloned.Append(CCFLAGS=['-Werror'])
         conf = Configure(cloned, help=False, custom_tests = {
-                'CheckFlag' : lambda(ctx) : CheckFlagTest(ctx, tool, extension, flag)
+                'CheckFlag' : lambda ctx : CheckFlagTest(ctx, tool, extension, flag)
         })
         available = conf.CheckFlag()
         conf.Finish()
@@ -2324,7 +2324,7 @@ def doConfigure(myenv):
             "undefined" : myenv.File("#etc/ubsan.blacklist"),
         }
 
-        blackfiles = set([v for (k, v) in blackfiles_map.iteritems() if k in sanitizer_list])
+        blackfiles = set([v for (k, v) in list(blackfiles_map.items()) if k in sanitizer_list])
         blacklist_options=["-fsanitize-blacklist=%s" % blackfile for blackfile in blackfiles]
 
         for blacklist_option in blacklist_options:

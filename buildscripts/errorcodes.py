@@ -10,9 +10,10 @@ import bisect
 import os
 import re
 import sys
-import utils
+from . import utils
 from collections import defaultdict, namedtuple
 from optparse import OptionParser
+from functools import reduce
 
 ASSERT_NAMES = [ "uassert" , "massert", "fassert", "fassertFailed" ]
 MINIMUM_CODE = 10000
@@ -154,14 +155,14 @@ def readErrorCodes():
 
     parseSourceFiles( checkDups )
 
-    if seen.has_key("0"):
+    if "0" in seen:
         code = "0"
         bad = seen[code]
         errors.append( bad )
         print( "ZERO_CODE:" )
         print( "  %s:%d:%s" % (bad.sourceFile, bad.lineNum, bad.lines) )
 
-    for code, locations in dups.items():
+    for code, locations in list(dups.items()):
         print( "DUPLICATE IDS: %s" % code )
         for loc in locations:
             print( "  %s:%d:%s" % (loc.sourceFile, loc.lineNum, loc.lines) )
@@ -181,22 +182,22 @@ def replaceBadCodes( errors, nextCode ):
     skip_errors = [e for e in errors if int(e.code) != 0]
 
     for loc in skip_errors:
-        print "SKIPPING NONZERO code=%s: %s:%s" % (loc.code, loc.sourceFile, loc.lineNum)
+        print("SKIPPING NONZERO code=%s: %s:%s" % (loc.code, loc.sourceFile, loc.lineNum))
 
     for assertLoc in zero_errors:
         (sourceFile, lineNum, lines, code) = assertLoc
-        print "UPDATING_FILE: %s:%s" % (sourceFile, lineNum)
+        print("UPDATING_FILE: %s:%s" % (sourceFile, lineNum))
 
         ln = lineNum - 1
 
         with open(sourceFile, 'r+') as f:
             fileLines = f.readlines()
             line = fileLines[ln]
-            print "LINE_%d_BEFORE:%s" % (lineNum, line.rstrip())
+            print("LINE_%d_BEFORE:%s" % (lineNum, line.rstrip()))
             line = re.sub(r'(\( *)(\d+)',
                           r'\g<1>' + str(nextCode),
                           line)
-            print "LINE_%d_AFTER :%s" % (lineNum, line.rstrip())
+            print("LINE_%d_AFTER :%s" % (lineNum, line.rstrip()))
             fileLines[ln] = line
             f.seek(0)
             f.writelines(fileLines)
@@ -255,7 +256,7 @@ def main():
     elif options.replace:
         replaceBadCodes(errors, next)
     else:
-        print ERROR_HELP
+        print(ERROR_HELP)
         sys.exit(1)
 
 

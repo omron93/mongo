@@ -68,7 +68,7 @@ def sorted_by_str(iterable):
     across invocations of SCons.  Since dependency order changes force rebuilds,
     we use this sort to create stable dependency orders.
     """
-    return sorted(iterable, cmp=lambda lhs, rhs: cmp(str(lhs), str(rhs)))
+    return sorted(iterable, key=lambda x: str(x))
 
 class DependencyCycleError(SCons.Errors.UserError):
     """Exception representing a cycle discovered in library dependencies."""
@@ -109,7 +109,7 @@ def __compute_libdeps(node):
                 deps.add(child)
                 deps.update(__get_libdeps(child))
 
-        except DependencyCycleError, e:
+        except DependencyCycleError as e:
             if len(e.cycle_nodes) == 1 or e.cycle_nodes[0] != e.cycle_nodes[-1]:
                 e.cycle_nodes.insert(0, node)
             raise
@@ -129,7 +129,7 @@ def __get_syslibdeps(node):
         for lib in __get_libdeps(node):
             for syslib in node.get_env().Flatten(lib.get_env().get(syslibdeps_env_var, [])):
                 if syslib:
-                    if type(syslib) in (str, unicode) and syslib.startswith(missing_syslibdep):
+                    if type(syslib) in (str, str) and syslib.startswith(missing_syslibdep):
                         print("Target '%s' depends on the availability of a "
                               "system provided library for '%s', "
                               "but no suitable library was found during configuration." %
@@ -192,7 +192,7 @@ def get_syslibdeps(source, target, env, for_signature):
         # they're believed to represent library short names, that should be prefixed with -l
         # or the compiler-specific equivalent.  I.e., 'm' becomes '-lm', but 'File("m.a") is passed
         # through whole cloth.
-        if type(d) in (str, unicode):
+        if type(d) in (str, str):
             result.append('%s%s%s' % (lib_link_prefix, d, lib_link_suffix))
         else:
             result.append(d)

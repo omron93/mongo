@@ -1,4 +1,4 @@
-import md5
+import hashlib
 import subprocess
 import SCons.Action
 
@@ -15,7 +15,7 @@ def default_variant_dir_generator(target, source, env, for_signature):
 
     # Hash the named options and their values, and take the first 8 characters of the hash as
     # the variant name
-    hasher = md5.md5()
+    hasher = hashlib.md5()
     for option in variant_options:
         hasher.update(option)
         hasher.update(str(env.GetOption(option)))

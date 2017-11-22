@@ -9,12 +9,12 @@ def register_integration_test(env, test):
     env['INTEGRATION_TEST_LIST_ENV']._IntegrationTestList('$INTEGRATION_TEST_LIST', installed_test)
 
 def integration_test_list_builder_action(env, target, source):
-    print "Generating " + str(target[0])
+    print("Generating " + str(target[0]))
     ofile = open(str(target[0]), 'wb')
     try:
         for s in source:
-            print '\t' + str(s)
-            ofile.write('%s\n' % s)
+            print('\t' + str(s))
+            ofile.write(('%s\n' % s).encode("utf-8"))
     finally:
         ofile.close()
 

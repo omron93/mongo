@@ -44,13 +44,13 @@ def generate(env):
                 # could avoid the shell out (and probably be faster, as we
                 # could get exactly the information we want).
                 contents = subprocess.check_output([env.subst('$ABIDW'), fname])
-            except subprocess.CalledProcessError, e:
+            except subprocess.CalledProcessError as e:
                 # ABIDW sometimes fails. In that case, log an error
                 # and fall back to the normal contents
-                print "WARNING: ABIDW failed for target %s, please file a bug report" % fname
+                print("WARNING: ABIDW failed for target %s, please file a bug report" % fname)
                 try:
                     contents = open(fname, "rb").read()
-                except EnvironmentError, e:
+                except EnvironmentError as e:
                     if not e.filename:
                         e.filename = fname
                     raise
