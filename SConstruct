@@ -156,7 +156,7 @@ add_option('wiredtiger',
     type='choice',
 )
 
-js_engine_choices = ['mozjs', 'none']
+js_engine_choices = ['mozjs', 'none', 'mozjs-45']
 add_option('js-engine',
     choices=js_engine_choices,
     default=js_engine_choices[0],
@@ -319,6 +319,11 @@ add_option('use-system-asio',
 
 add_option('use-system-icu',
     help="use system version of ICU",
+    nargs=0,
+)
+
+add_option('use-system-mozjs',
+    help="use system version of mozjs",
     nargs=0,
 )
 
@@ -2850,19 +2855,19 @@ def doConfigure(myenv):
 
     if use_system_version_of_library("icu"):
         conf.FindSysLibDep("icudata", ["icudata"])
-        # We can't use FindSysLibDep() for icui18n and icuuc below, since SConf.CheckLib() (which
-        # FindSysLibDep() relies on) doesn't expose an 'extra_libs' parameter to indicate that the
-        # library being tested has additional dependencies (icuuc depends on icudata, and icui18n
-        # depends on both). As a workaround, we skip the configure check for these two libraries and
-        # manually assign the library name. We hope that if the user has icudata installed on their
-        # system, then they also have icu18n and icuuc installed.
-        conf.env['LIBDEPS_ICUI18N_SYSLIBDEP'] = 'icui18n'
-        conf.env['LIBDEPS_ICUUC_SYSLIBDEP'] = 'icuuc'
+        conf.FindSysLibDep("icuuc", ["icuuc"])
+        conf.FindSysLibDep("icui18n", ["icui18n"])
+
+    if use_system_version_of_library("mozjs"):
+        conf.FindSysLibDep("mozjs", [jsEngine])
 
     if wiredtiger and use_system_version_of_library("wiredtiger"):
         if not conf.CheckCXXHeader( "wiredtiger.h" ):
             myenv.ConfError("Cannot find wiredtiger headers")
         conf.FindSysLibDep("wiredtiger", ["wiredtiger"])
+
+    if use_system_version_of_library("asio"):
+        conf.CheckCXXHeader("asio.hpp")
 
     conf.env.Append(
         CPPDEFINES=[
@@ -3032,7 +3037,7 @@ def doConfigure(myenv):
         if conf.CheckExtendedAlignment(size):
             conf.env.SetConfigHeaderDefine("MONGO_CONFIG_MAX_EXTENDED_ALIGNMENT", size)
             break
- 
+
     conf.env['MONGO_HAVE_LIBMONGOC'] = conf.CheckLibWithHeader(
             ["mongoc-1.0"],
             ["mongoc.h"],
@@ -3172,7 +3177,7 @@ Export("get_option")
 Export("has_option")
 Export("use_system_version_of_library")
 Export("serverJs")
-Export("usemozjs")
+Export("usemozjs jsEngine")
 Export('module_sconscripts')
 Export("debugBuild optBuild")
 Export("wiredtiger")
