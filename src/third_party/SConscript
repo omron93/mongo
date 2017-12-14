@@ -248,12 +248,21 @@ if usemozjs:
         ])
 
 if "tom" in env["MONGO_CRYPTO"]:
-    tomcryptEnv = env.Clone()
-    tomcryptEnv.SConscript('tomcrypt' + tomcryptSuffix + '/SConscript', exports={'env' : tomcryptEnv })
-    tomcryptEnv = tomcryptEnv.Clone(
-        LIBDEPS_INTERFACE=[
-            'tomcrypt' + tomcryptSuffix + '/tomcrypt',
-        ])
+    if use_system_version_of_library("boost"):
+        # On windows, we don't need the syslibdeps because autolib will select the right libraries
+        # for us automatically.
+        if not env.TargetOSIs('windows'):
+            tomcryptEnv = env.Clone(
+                SYSLIBDEPS=[
+                    env['LIBDEPS_TOMCRYPT_SYSLIBDEP'],
+                ])
+    else:
+        tomcryptEnv = env.Clone()
+        tomcryptEnv.SConscript('tomcrypt' + tomcryptSuffix + '/SConscript', exports={'env' : tomcryptEnv })
+        tomcryptEnv = tomcryptEnv.Clone(
+            LIBDEPS_INTERFACE=[
+                'tomcrypt' + tomcryptSuffix + '/tomcrypt',
+            ])
 
     tomcryptEnv.Library(
         target="shim_tomcrypt",

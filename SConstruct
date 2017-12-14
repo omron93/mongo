@@ -332,6 +332,11 @@ add_option('use-system-intel_decimal128',
     nargs=0,
 )
 
+add_option('use-system-tomcrypt',
+    help='use system version of tomcryp',
+    nargs=0,
+)
+
 add_option('use-system-all',
     help='use all system libraries',
     nargs=0,
@@ -2852,6 +2857,9 @@ def doConfigure(myenv):
 
     if use_system_version_of_library("intel_decimal128"):
         conf.FindSysLibDep("intel_decimal128", ["bid"])
+
+    if use_system_version_of_library("tomcrypt"):
+        conf.FindSysLibDep("tomcrypt", ["libtomcrypt"])
 
     if use_system_version_of_library("icu"):
         conf.FindSysLibDep("icudata", ["icudata"])
