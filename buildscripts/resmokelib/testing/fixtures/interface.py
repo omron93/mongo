@@ -2,8 +2,9 @@
 Interface of the different fixtures for executing JSTests against.
 """
 
+from __future__ import absolute_import
 
-
+import six
 import time
 
 import pymongo
@@ -27,7 +28,7 @@ def make_fixture(class_name, *args, **kwargs):
     return _FIXTURES[class_name](*args, **kwargs)
 
 
-class Fixture(object, metaclass=registry.make_registry_metaclass(_FIXTURES)):
+class Fixture(six.with_metaclass(registry.make_registry_metaclass(_FIXTURES), object)):
     """
     Base class for all fixtures.
     """

@@ -2,11 +2,12 @@
 Interface for customizing the behavior of a test fixture.
 """
 
-
+from __future__ import absolute_import
 
 from ...logging import loggers
 from ...utils import registry
 
+import six
 
 _HOOKS = {}
 
@@ -22,7 +23,7 @@ def make_custom_behavior(class_name, *args, **kwargs):
     return _HOOKS[class_name](*args, **kwargs)
 
 
-class CustomBehavior(object, metaclass=registry.make_registry_metaclass(_HOOKS)):
+class CustomBehavior(six.with_metaclass(registry.make_registry_metaclass(_HOOKS), object)):
     """
     The common interface all CustomBehaviors will inherit from.
     """
