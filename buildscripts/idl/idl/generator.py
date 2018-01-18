@@ -15,7 +15,7 @@
 # pylint: disable=too-many-lines
 """IDL C++ Code Generator."""
 
-
+from __future__ import absolute_import, print_function, unicode_literals
 
 from abc import ABCMeta, abstractmethod
 import io
@@ -33,6 +33,7 @@ from . import enum_types
 from . import struct_types
 from . import writer
 
+ABC = ABCMeta(str('ABC'), (object,), {'__slots__': ()})
 
 def _get_field_member_name(field):
     # type: (ast.Field) -> unicode
@@ -105,7 +106,7 @@ def _get_bson_type_check(bson_element, ctxt_name, field):
         return '%s.checkAndAssertTypes(%s, %s)' % (ctxt_name, bson_element, type_list)
 
 
-class _FieldUsageCheckerBase(object, metaclass=ABCMeta):
+class _FieldUsageCheckerBase(ABC):
     """Check for duplicate fields, and required fields as needed."""
 
     def __init__(self, indented_writer):
