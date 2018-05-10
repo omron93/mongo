@@ -3043,7 +3043,7 @@ def doConfigure(myenv):
     # ask each module to configure itself and the build environment.
     moduleconfig.configure_modules(mongo_modules, conf)
 
-    if env['TARGET_ARCH'] == "ppc64le":
+    if env['TARGET_ARCH'] == "ppc64le" or env['TARGET_ARCH'] == "ppc64":
         # This checks for an altivec optimization we use in full text search.
         # Different versions of gcc appear to put output bytes in different
         # parts of the output vector produced by vec_vbpermq.  This configure
