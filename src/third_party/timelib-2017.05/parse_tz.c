@@ -38,7 +38,7 @@
 # endif
 #endif
 
-#if defined(__s390__)
+#if defined(__s390__) || defined(__powerpc64__)
 # if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
 #  define WORDS_BIGENDIAN
 # else
