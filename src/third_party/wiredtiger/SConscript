@@ -152,7 +152,7 @@ condition_map = {
     'WINDOWS_HOST' : env.TargetOSIs('windows'),
 
     'ARM64_HOST'   : env['TARGET_ARCH'] == 'aarch64',
-    'POWERPC_HOST' : env['TARGET_ARCH'] == 'ppc64le',
+    'POWERPC_HOST' : env['TARGET_ARCH'] == 'ppc64le' or env['TARGET_ARCH'] == 'ppc64',
     'X86_HOST'     : env['TARGET_ARCH'] == 'x86_64',
     'ZSERIES_HOST' : env['TARGET_ARCH'] == 's390x',
 }
@@ -183,6 +183,10 @@ if useSnappy:
 # On zSeries we may disable because SLES 11 kernel doe not support the instructions.
 if not (env['TARGET_ARCH'] == 's390x' and get_option("use-s390x-crc32") == "off"):
     env.Append(CPPDEFINES=["HAVE_CRC32_HARDWARE"])
+
+# It is not possible to pass ASFLAGS through variables to scons now
+if env['TARGET_ARCH'] == 'ppc64':
+    env.Append(ASFLAGS=["-mcpu=power8"])
 
 wtlib = env.Library(
     target="wiredtiger",

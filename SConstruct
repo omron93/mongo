@@ -1052,6 +1052,7 @@ processor_macros = {
     'arm'     : { 'endian': 'little', 'defines': ('__arm__',) },
     'aarch64' : { 'endian': 'little', 'defines': ('__arm64__', '__aarch64__')},
     'i386'    : { 'endian': 'little', 'defines': ('__i386', '_M_IX86')},
+    'ppc64'   : { 'endian': 'big',    'defines': ('__powerpc64__) && defined(__BIG_ENDIAN__',)},
     'ppc64le' : { 'endian': 'little', 'defines': ('__powerpc64__',)},
     's390x'   : { 'endian': 'big',    'defines': ('__s390x__',)},
     'sparc'   : { 'endian': 'big',    'defines': ('__sparc',)},

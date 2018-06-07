@@ -570,7 +570,7 @@
 #       endif
 
 
-#elif (defined(__s390x__))
+#elif (defined(__s390x__)) || (defined(__powerpc64__) && defined(__BIG_ENDIAN__))
 
 #	undef  vax
 #	undef  mips
