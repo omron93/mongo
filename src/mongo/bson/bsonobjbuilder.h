@@ -350,13 +350,25 @@ public:
         return append(fieldName, d);
     }
 
-    BSONObjBuilder& appendNumber(StringData fieldName, size_t n) {
+    BSONObjBuilder& appendNumber(StringData fieldName, uint64_t n) {
         static const size_t maxInt = (1 << 30);
         if (n < maxInt)
             append(fieldName, static_cast<int>(n));
         else
             append(fieldName, static_cast<long long>(n));
         return *this;
+    }
+
+    /**
+     * Implement appendNumber for uint64_t and size_t on 32-bit platforms where
+     * these types differs. Typically for
+     * 32b: size_t ~ unsigned int; uint64_t ~ unsigned long long;
+     * 64b: size_t ~ unsigned long; uint64_t ~ unsigned long;
+     */
+    inline BSONObjBuilder& appendNumber(
+        StringData fieldName,
+        std::conditional<!std::is_same<uint64_t, size_t>::value, size_t, unsigned int>::type n) {
+        return appendNumber(fieldName, static_cast<uint64_t>(n));
     }
 
     BSONObjBuilder& appendNumber(StringData fieldName, Decimal128 decNumber) {
