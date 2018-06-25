@@ -4,12 +4,12 @@
 Parses .cpp files for assertions and verifies assertion codes are distinct.
 Optionally replaces zero codes in source code with new distinct values.
 """
-from __future__ import unicode_literals
-import io
 
 from __future__ import absolute_import
 from __future__ import print_function
+from __future__ import unicode_literals
 
+import io
 import bisect
 import os.path
 import sys
