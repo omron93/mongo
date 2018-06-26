@@ -143,7 +143,8 @@ inline bool mongoSignedAddOverflow64(long long lhs, long long rhs, long long* su
     return __builtin_add_overflow(lhs, rhs, sum);
 }
 
-inline bool mongoUnsignedAddOverflow64(unsigned long lhs, unsigned long rhs, unsigned long* sum) {
+// 32b arch: invalid conversion from 'size_t*' {aka 'unsigned int*'} to 'long unsigned int*'
+inline bool mongoUnsignedAddOverflow64(std::size_t lhs, std::size_t rhs, std::size_t* sum) {
     return __builtin_add_overflow(lhs, rhs, sum);
 }
 
