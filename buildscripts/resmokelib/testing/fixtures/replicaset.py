@@ -81,7 +81,7 @@ class ReplicaSetFixture(interface.ReplFixture):  # pylint: disable=too-many-inst
                 node = self._new_mongod(i, self.replset_name)
                 self.nodes.append(node)
 
-        for i in xrange(self.num_nodes):
+        for i in range(self.num_nodes):
             if self.linear_chain and i > 0:
                 self.nodes[i].mongod_options["set_parameters"][
                     "failpoint.forceSyncSourceCandidate"] = {
