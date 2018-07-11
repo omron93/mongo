@@ -41,7 +41,7 @@ StorageGlobalParams::StorageGlobalParams() {
 }
 
 void StorageGlobalParams::reset() {
-    engine = "wiredTiger";
+    engine = "mmapv1";
     engineSetByUser = false;
     dbpath = kDefaultDbPath;
     upgrade = false;
