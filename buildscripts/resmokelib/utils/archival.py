@@ -4,7 +4,11 @@ Archival utility.
 
 from __future__ import absolute_import
 
-import Queue
+try:
+  import queue
+except ImportError:
+  #Python 2
+  import Queue as queue
 import collections
 import json
 import math
@@ -52,7 +56,7 @@ def file_list_size(files):
 def directory_size(directory):
     """ Return size (in bytes) of files in 'directory' tree. """
     dir_bytes = 0
-    for root_dir, _, files in os.walk(unicode(directory)):
+    for root_dir, _, files in os.walk(str(directory)):
         for name in files:
             full_name = os.path.join(root_dir, name)
             try:
@@ -114,7 +118,7 @@ class Archival(object):
         self._lock = threading.Lock()
 
         # Start the worker thread to update the 'archival_json_file'.
-        self._archive_file_queue = Queue.Queue()
+        self._archive_file_queue = queue.Queue()
         self._archive_file_worker = threading.Thread(
             target=self._update_archive_file_wkr,
             args=(self._archive_file_queue, logger),
@@ -127,7 +131,7 @@ class Archival(object):
             self.s3_client = s3_client
 
         # Start the worker thread which uploads the archive.
-        self._upload_queue = Queue.Queue()
+        self._upload_queue = queue.Queue()
         self._upload_worker = threading.Thread(
             target=self._upload_to_s3_wkr,
             args=(self._upload_queue, self._archive_file_queue, logger, self.s3_client),

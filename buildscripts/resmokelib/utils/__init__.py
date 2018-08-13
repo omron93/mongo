@@ -51,10 +51,10 @@ def rmtree(path, **kwargs):
     See https://github.com/pypa/setuptools/issues/706.
     """
     if is_windows():
-        if not isinstance(path, unicode):
-            path = unicode(path, "utf-8")
+        if not isinstance(path, str):
+            path = str(path, "utf-8")
     else:
-        if isinstance(path, unicode):
+        if isinstance(path, str):
             path = path.encode("utf-8")
     shutil.rmtree(path, **kwargs)
 
